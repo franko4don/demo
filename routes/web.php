@@ -11,6 +11,9 @@ use App\Notifications\TransactionMade;
 | contains the "web" middleware group. Now create something great!
 |
  */
+Route::get('just', function(){
+	dd("Just to be sure auto deploy worked");
+});
 Auth::routes();
 Route::get('notify','WalletController@notifyme');
 // get default home pages
