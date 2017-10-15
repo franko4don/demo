@@ -219,7 +219,7 @@ class WalletController extends Controller
                             $data['transaction_status'] = true;
                             sendWalletTransactionNotifications($w_transaction);
                             $this->logTransaction($data);
-                            event(new WalletToWallet($transactions));
+                            event(new WalletToWallet($w_transactions));
                             
                             return redirect()->action('pagesController@success');
                         } else {
