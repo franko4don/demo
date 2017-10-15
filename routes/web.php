@@ -12,7 +12,7 @@ use App\Notifications\TransactionMade;
 |
  */
 Route::get('just', function(){
-	dd("yes it worked ni");
+	dd("last check");
 });
 Auth::routes();
 Route::get('notify','WalletController@notifyme');
