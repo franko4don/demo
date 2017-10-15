@@ -12,7 +12,7 @@ use App\Notifications\TransactionMade;
 |
  */
 Route::get('just', function(){
-	dd("Just to be sure auto deploy worked");
+	dd("yes it worked ni");
 });
 Auth::routes();
 Route::get('notify','WalletController@notifyme');
