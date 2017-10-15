@@ -19,6 +19,7 @@ use App\BankTransaction;
 use RestrictionController;
 use App\Http\Controllers\RestrictionController as Restrict;
 use App\Notifications\TransactionMade;
+use App\Notifications\WalletToWalletTransfer;
 use App\Events\TransferToBank;
 use App\Events\FundWallet;
 use App\Events\WalletToWallet;
@@ -47,14 +48,16 @@ class WalletController extends Controller
     //get token for new transaction
     public function getToken()
     {
-        $api_key = env('API_KEY');
-        $secret_key = env('API_SECRET');
+        
+        $api_key = config('app.api_key');
+        $secret_key = config('app.api_secret');
         \Unirest\Request::verifyPeer(false);
         $headers = array('content-type' => 'application/json');
         $query = array('apiKey' => $api_key, 'secret' => $secret_key);
         $body = \Unirest\Request\Body::json($query);
         $response = \Unirest\Request::post('https://moneywave.herokuapp.com/v1/merchant/verify', $headers, $body);
         $response = json_decode($response->raw_body, true);
+        
         $status = $response['status'];
         if (!$status == 'success') {
             echo 'INVALID TOKEN';
@@ -213,8 +216,8 @@ class WalletController extends Controller
                             $w_transaction->recipient_wallet = $request->recipientWallet;
                             $w_transaction->status = 'true';
                             $w_transaction->save();
-                            
                             $data['transaction_status'] = true;
+                            sendWalletTransactionNotifications($w_transaction);
                             $this->logTransaction($data);
                             event(new WalletToWallet($transactions));
                             
@@ -302,7 +305,7 @@ class WalletController extends Controller
                     $transaction->transaction_status = true;
                     $transaction->narration = $request->narration;
                     $transaction->save();
-                    Auth::user()->notify(new TransactionMade($transaction));
+                    $this->sendBankTransactionNotifications($transaction);
 
 
                     event(new TransferToBank($bank));
@@ -410,6 +413,27 @@ class WalletController extends Controller
         $transaction->created_at = new DateTime();
         $transaction->save();
         
+    }
+
+    public function notifyMe(){
+        $transaction = WalletTransaction::first();
+        $this->sendWalletTransactionNotifications($transaction);
+    }
+
+    public function sendBankTransactionNotifications($transaction){
+        Auth::user()->notify(new TransactionMade($transaction));
+        $admins = User::where('is_admin', true)->get();
+        foreach($admins as $key => $admin){
+            $admin->notify(new TransactionMade($transaction));
+        }
+    }
+
+    public function sendWalletTransactionNotifications($transaction){
+        Auth::user()->notify(new WalletToWalletTransfer($transaction, Auth::user()));
+        $admins = User::where('is_admin', true)->get();
+        foreach($admins as $key => $admin){
+            $admin->notify(new WalletToWalletTransfer($transaction, Auth::user()));
+        }
     }
 
     /**

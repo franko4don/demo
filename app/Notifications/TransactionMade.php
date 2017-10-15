@@ -45,7 +45,7 @@ class TransactionMade extends Notification implements ShouldQueue
                     ->subject('Transaction Details')
                     ->line('Your transfer to '.$this->transaction->beneficiary->name.'
                             with account number '.$this->transaction->beneficiary->account_number.' was successful')
-                    ->line('Visit the below to view the transaction on your dashboard')
+                    ->line('Visit the link below to view the transaction on your dashboard')
                     ->action('View Transaction', url("/wallet/".$this->transaction->wallet_id))
                     ->line('Thank you for using transfer transfer rules!');
     }
