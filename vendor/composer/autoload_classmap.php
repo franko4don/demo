@@ -55,6 +55,7 @@ return array(
     'App\\Listeners\\FundWalletBalance' => $baseDir . '/app/Listeners/FundWalletBalance.php',
     'App\\Listeners\\UpdateWalletBalance' => $baseDir . '/app/Listeners/UpdateWalletBalance.php',
     'App\\Listeners\\WalletTransferBalance' => $baseDir . '/app/Listeners/WalletTransferBalance.php',
+    'App\\Notifications\\TransactionMade' => $baseDir . '/app/Notifications/TransactionMade.php',
     'App\\Notifications\\WalletToWalletTransfer' => $baseDir . '/app/Notifications/WalletToWalletTransfer.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',

@@ -18,6 +18,7 @@ use App\User;
 use App\BankTransaction;
 use RestrictionController;
 use App\Http\Controllers\RestrictionController as Restrict;
+use App\Notifications\TransactionMade;
 use App\Events\TransferToBank;
 use App\Events\FundWallet;
 use App\Events\WalletToWallet;
@@ -301,7 +302,8 @@ class WalletController extends Controller
                     $transaction->transaction_status = true;
                     $transaction->narration = $request->narration;
                     $transaction->save();
-                    //end of logic for saving transactions
+                    Auth::user()->notify(new TransactionMade($transaction));
+
 
                     event(new TransferToBank($bank));
                     return redirect('success')->with('status',$data);
@@ -406,8 +408,8 @@ class WalletController extends Controller
         $transaction->payee_wallet_code = $data['payee_wallet_code'];
         $transaction->transaction_reference = $data['transaction_reference'];
         $transaction->created_at = new DateTime();
-        
         $transaction->save();
+        
     }
 
     /**

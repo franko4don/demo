@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\TransactionMade;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,10 @@
 |
  */
 Auth::routes();
-
+Route::get('notify', function(){
+	$transaction = App\BankTransaction::first();
+	Auth::user()->notify(new TransactionMade($transaction));
+});
 // get default home pages
 Route::get('/', 'pagesController@home')->name('home');
 
@@ -87,9 +91,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/integrity/{txRef}/{email}', 'RavepayController@checkSum');
 
 	Route::get('/ravepaysuccess/{ref}/{amount}/{currency}', 'RavepayController@success');
-	Route::get('/addbeneficiary', 'pagesController@addBeneficiary');
-	Route::post('/addbeneficiary/insertBeneficiary', 'pagesController@insertBeneficiary')->name('beneficiaries.insert');
-
 	Route::get('/ravepaysuccess/{ref}/{amount}/{currency}', 'RavepayController@success')->name('ravepay.success');
 	Route::get('/addbeneficiary/{wallet}', 'pagesController@addBeneficiary');
 	Route::post('/addbeneficiary/{wallet}', 'pagesController@insertBeneficiary')->name('beneficiaries.insert');
@@ -134,18 +135,6 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
 	Route::post('/{wallet_code}/fund', 'WalletController@cardWallet');
 	Route::post('/otp', 'WalletController@otp');
 	//Admin wallet operations ends
-
-
-  	//Beneficiaries Route starts
-  	Route::get('beneficiaries', 'Admin\BeneficiaryController@index')->name('beneficiaries.index');
-  	Route::get('beneficiaries/details/{id}', 'Admin\BeneficiaryController@details')->name('beneficiaries.details');
-  	Route::get('beneficiaries/add', 'Admin\BeneficiaryController@add')->name('beneficiaries.add');
-  	Route::post('beneficiaries/insert', 'Admin\BeneficiaryController@insert')->name('beneficiaries.insert');
-  	Route::get('beneficiaries/edit/{id}', 'Admin\BeneficiaryController@edit')->name('beneficiaries.edit');
-  	Route::post('beneficiaries/update/{id}', 'Admin\BeneficiaryController@update')->name('beneficiaries.update');
-  	Route::get('beneficiaries/delete/{id}', 'Admin\BeneficiaryController@delete')->name('beneficiaries.delete');
-	Route::get('/managebeneficiary', 'Admin\AdminController@managebeneficiary');
-	// Beneficiary route ends
 
 
 	//Permissions start
