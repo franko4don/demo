@@ -177,9 +177,9 @@ class BeneficiaryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        $user = User::find($id);
+        $user = Beneficiary::find($id);
         $user->delete();
         $name = Auth::user()->username;
         return redirect('/admin/users')->with("name", $name);

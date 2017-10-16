@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\TransactionMade;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,6 +11,10 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> 949ee20ea678766dec1c817078ac6b87e000f680
 Auth::routes();
 Route::get('notify','WalletController@notifyme');
 // get default home pages
@@ -94,9 +99,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/integrity/{txRef}/{email}', 'RavepayController@checkSum');
 
 	Route::get('/ravepaysuccess/{ref}/{amount}/{currency}', 'RavepayController@success');
-	Route::get('/addbeneficiary', 'pagesController@addBeneficiary');
-	Route::post('/addbeneficiary/insertBeneficiary', 'pagesController@insertBeneficiary')->name('beneficiaries.insert');
-
 	Route::get('/ravepaysuccess/{ref}/{amount}/{currency}', 'RavepayController@success')->name('ravepay.success');
 	Route::get('/addbeneficiary/{wallet}', 'pagesController@addBeneficiary');
 	Route::post('/addbeneficiary/{wallet}', 'pagesController@insertBeneficiary')->name('beneficiaries.insert');
